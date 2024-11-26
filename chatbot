@@ -6,25 +6,27 @@ responses = {
     "how are you": ["I'm just a program, but thanks for asking!", "Doing well, how about you?", "I don't have feelings, but I'm here to help!"],
     "what is your name": ["I'm a simple chatbot created to assist you.", "You can call me Chatbot!"],
     "bye": ["Goodbye! Have a great day!", "See you later!", "Take care!"],
-    "joke": ["Why did the scarecrow win an award? Because he was outstanding in his field!","Why did the lion go to therapy? He found out his wife was a cheetah.",
-             "My wife ran off with my best friend last year. I still miss him.","Taking my husband’s name wasn’t a feminist act. I just don’t want anyone I went to high school with to find me.",
-              "Why did the zombies get divorced? Their marriage was dead."],
+    "joke": ["Why did the scarecrow win an award? Because he was outstanding in his field!", 
+              "I told my computer I needed a break, and now it won't stop sending me beach wallpapers!"],
     "weather": ["It's sunny with a chance of meatballs!", "I can't check the weather, but I hope it's nice outside!"],
-    "help": ["I can chat with you, tell jokes, play a number guessing game, and provide information. Just ask me anything!", 
+    "help": ["I can chat with you, tell jokes, and provide information. Just ask me anything!", 
              "Try asking me about the weather, tell me to joke, or just say hello!"],
     "favorite color": ["I don't have a favorite color, but I think all colors are beautiful!", 
                        "Colors are fascinating! What's your favorite color?"],
-    "play number game": ["Great! I'm thinking of a number between 1 and 100. Can you guess it?"],
     "default": ["I'm sorry, I don't understand that.", "Can you please rephrase?", "I'm not sure how to respond to that."]
 }
 
 # Memory to store user preferences
 user_memory = {}
-number_to_guess = None
 
 def get_response(user_input):
     # Normalize the user input to lower case
     user_input = user_input.lower()
+    
+    # Check if the user asked for a random number
+    if "random number" in user_input:
+        random_number = random.randint(0, 1000)
+        return f"Here is your random number: {random_number}"
     
     # Check for known responses
     for key in responses:
@@ -41,19 +43,6 @@ def remember_user_preference(user_input):
         return f"Got it! Your favorite color is {color}."
     return None
 
-def start_number_game():
-    global number_to_guess
-    number_to_guess = random.randint(1, 100)
-    return "I've picked a number between 1 and 100. Try to guess it!"
-
-def check_guess(guess):
-    if guess < number_to_guess:
-        return "Too low! Try again."
-    elif guess > number_to_guess:
-        return "Too high! Try again."
-    else:
-        return "Congratulations! You've guessed the number!"
-
 def chatbot():
     print("Chatbot: Hello! I'm here to chat with you. Type 'bye' to exit.")
     
@@ -69,21 +58,6 @@ def chatbot():
         memory_response = remember_user_preference(user_input)
         if memory_response:
             print(f"Chatbot: {memory_response}")
-            continue
-        
-        # Check if the user wants to play the number guessing game
-        if "play number game" in user_input:
-            print(f"Chatbot: {start_number_game()}")
-            while True:
-                guess_input = input("You (guess a number): ")
-                if guess_input.isdigit():
-                    guess = int(guess_input)
-                    response = check_guess(guess)
-                    print(f"Chatbot: {response}")
-                    if response == "Congratulations! You've guessed the number!":
-                        break
-                else:
-                    print("Chatbot: Please enter a valid number.")
             continue
         
         # Get a response from the chatbot
